@@ -2,47 +2,66 @@ package com.sainsburys.serverside_test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.json.JsonObject;
-
+/**
+ * This class responsible the HTTP connection and looks for data with selectors.
+ */
 public class HTTPFetcher {
-  private Connection _connection;
   private URL _url;
-
-  public URL getUrl() {
-    return _url;
-  }
-
-  public void setUrl(URL url) {
-    _url = url;
-  }
 
   public HTTPFetcher(URL url){
     _url = url;
   }
 
-  public JsonObject fetchingData(){
+  /**
+   * This method collect data from added HTML page.
+   *
+   * @return Collection of ProductDetails
+   */
+  public Collection<ProductDetails> fetchingData(){
 
-    _connection = Jsoup.connect(_url.toString());
+    Connection connection = Jsoup.connect(_url.toString());
+
+    Collection<ProductDetails> productDetails = new ArrayList<>();
 
     try {
-      Document document = _connection.get();
+      Document document = connection.get();
       Elements elements = document.select("#productLister .gridItem");
 
       for (Element element: elements){
-        String productName = element.select("h3 a").text();
-        String pricePerUnit = element.select(".pricePerUnit").text();
-        String pricePerMeasure = element.select("pricePerMeasure").text();
+        String title = element.select("h3 a").text();
+
+        Double unit_price = new Double(element.select(".pricePerUnit").text().split("/")[0].substring(1));
+        unit_price = Math.round(unit_price * 100.0) / 100.0;
+
+        StringBuilder descriptionURL = new StringBuilder();
+        descriptionURL.append("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/shop");
+        descriptionURL.append(element.select("h3 a").attr("href").split("shop")[1]);
+
+        Document decritpionDoc = Jsoup.connect(descriptionURL.toString()).get();
+        Double kcal_per_100g = null;
+        Elements fullDetailsList = decritpionDoc.select(".nutritionLevel1");
+        if(!fullDetailsList.isEmpty()){
+          String kcal_per_100gWithKcal = fullDetailsList.first().text();
+          kcal_per_100g = new Double(kcal_per_100gWithKcal.split("kcal")[0]);
+        }
+
+        String description = decritpionDoc.select("div.productText p").first().text();
+
+        productDetails.add(new ProductDetails(title, unit_price, kcal_per_100g, description));
+
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    return null;
+    return productDetails;
   }
 
 }

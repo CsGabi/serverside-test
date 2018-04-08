@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Main class
+ * Main class, look for sainsbury's groceries data and parse it to a JSON standard output like a string.
  *
  */
 public class Main {
@@ -13,7 +13,7 @@ public class Main {
   public static void main( String[] args ){
     try {
       HTTPFetcher httpFetcher = new HTTPFetcher(new URL(url));
-      httpFetcher.fetchingData();
+      System.out.println(BuildJSONResult.buildJSONResult(httpFetcher.fetchingData()));
     } catch (MalformedURLException e) {
       e.printStackTrace();
     }

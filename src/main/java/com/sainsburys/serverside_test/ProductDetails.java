@@ -1,14 +1,12 @@
 package com.sainsburys.serverside_test;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-
+/**
+ * This class store a Product information.
+ */
 public class ProductDetails {
   private String _title;
-  private double _size;
-  private double _unitPrice;
+  private double _unit_price;
+  private Double _kcal_per_100g;
   private String _description;
 
   public String getTitle() {
@@ -19,20 +17,20 @@ public class ProductDetails {
     _title = title;
   }
 
-  public double getSize() {
-    return _size;
-  }
-
-  public void setSize(double size) {
-    _size = size;
-  }
-
   public double getUnitPrice() {
-    return _unitPrice;
+    return _unit_price;
   }
 
-  public void setUnitPrice(double unitPrice) {
-    _unitPrice = unitPrice;
+  public void setUnitPrice(double unit_price) {
+    _unit_price = unit_price;
+  }
+
+  public Double getKcalPer100g() {
+    return _kcal_per_100g;
+  }
+
+  public void setKcalPer100g(double kcal_per_100g) {
+    _kcal_per_100g = kcal_per_100g;
   }
 
   public String getDescription() {
@@ -43,24 +41,11 @@ public class ProductDetails {
     _description = description;
   }
 
-  public ProductDetails(String title, double size, double unitPrice, String description){
+  public ProductDetails(String title, double unit_price, Double kcal_per_100g, String description){
     _title = title;
-    _size = size;
-    _unitPrice = unitPrice;
+    _unit_price = unit_price;
+    _kcal_per_100g = kcal_per_100g;
     _description = description;
   }
-
-  public JsonObject buildJJON(){
-    JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    JsonObject value = factory.createObjectBuilder()
-        .add("title", _title)
-        .add("size", _size)
-        .add("unitPrice", _unitPrice)
-        .add("description", _description)
-        .build();
-
-    return value;
-  }
-
 
 }
