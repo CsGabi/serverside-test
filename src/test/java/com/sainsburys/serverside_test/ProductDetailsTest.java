@@ -16,13 +16,7 @@ public class ProductDetailsTest{
   public void productDetailsTransformJSON(){
     ProductDetails productDetails = new ProductDetails("Paprika", 6.21, new Double("621"), "Most famous Hungarian" +
         " paprika.");
-
-    Map<String, Object> result = new HashMap<>();
-    result.put("title", "Paprika");
-    result.put("unit_price", 6.21);
-    result.put("kcal_per_100g", 621.0);
-    result.put("description", "Most famous Hungarian paprika.");
-
+    
     JsonBuilderFactory factory = Json.createBuilderFactory(null);
     JsonObjectBuilder jResult = factory.createObjectBuilder();
     jResult.add("title", "Paprika");
