@@ -46,13 +46,13 @@ public class HTTPFetcher {
 
         Document decritpionDoc = Jsoup.connect(descriptionURL.toString()).get();
         Double kcal_per_100g = null;
-        Elements fullDetailsList = decritpionDoc.select(".nutritionLevel1");
+        Elements fullDetailsList = decritpionDoc.select(".nutritionTable .tableRow0 td");
         if(!fullDetailsList.isEmpty()){
           String kcal_per_100gWithKcal = fullDetailsList.first().text();
           kcal_per_100g = new Double(kcal_per_100gWithKcal.split("kcal")[0]);
         }
 
-        String description = decritpionDoc.select("div.productText p").first().text();
+        String description = decritpionDoc.select("div.productText p:not([class])").first().text();
 
         productDetails.add(new ProductDetails(title, unit_price, kcal_per_100g, description));
 
