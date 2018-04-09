@@ -47,4 +47,4 @@ serverside-test\
                             ProductDetailsTest.java
 ```
 
-If I have more freetime I will create own Exceptions for HTTPFetcher and BuildJSONResult classes.
+If I have more freetime I will create own Exceptions for HTTPFetcher and BuildJSONResult classes and of course implement more tests. 
