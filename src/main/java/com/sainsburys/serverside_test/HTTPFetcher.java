@@ -45,12 +45,7 @@ public class HTTPFetcher {
         descriptionURL.append(element.select("h3 a").attr("href").split("shop")[1]);
 
         Document decritpionDoc = Jsoup.connect(descriptionURL.toString()).get();
-        Double kcal_per_100g = null;
-        Elements fullDetailsList = decritpionDoc.select(".nutritionTable .tableRow0 td");
-        if(!fullDetailsList.isEmpty()){
-          String kcal_per_100gWithKcal = fullDetailsList.first().text();
-          kcal_per_100g = new Double(kcal_per_100gWithKcal.split("kcal")[0]);
-        }
+        Double kcal_per_100g = findKcalIfExsists(decritpionDoc);
 
         String description = decritpionDoc.select("div.productText p:not([class])").first().text();
 
@@ -62,6 +57,34 @@ public class HTTPFetcher {
     }
 
     return productDetails;
+  }
+  
+  /**
+   * This method find kcal value two differents way from added HTML page.
+   *
+   * @param jsoup.node.Document which comes from Jsoup.connect method.
+   * @return Double value of kcal
+   */
+  private Double findKcalIfExsists(Document doc){
+	  Double kcal_per_100g = null;
+	  if(!doc.select(".nutritionTable").isEmpty()){
+		  Elements fullDetailsList = doc.select(".nutritionTable .tableRow0 td");
+		  if(fullDetailsList.isEmpty()){
+			  fullDetailsList = doc.select(".nutritionTable tr .rowHeader");
+			  if(!fullDetailsList.isEmpty()){
+				  for(Element elem : fullDetailsList){
+					  if(elem.text().contains("kcal")){
+						  fullDetailsList = elem.parent().select("td");
+					  }
+				  }
+			  }
+		  }
+		  if(!fullDetailsList.isEmpty()){
+  		  String kcal_per_100gWithKcal = fullDetailsList.first().text();
+	  	  kcal_per_100g = new Double(kcal_per_100gWithKcal.split("kcal")[0]);
+		  }
+	  }
+	  return kcal_per_100g;
   }
 
 }
