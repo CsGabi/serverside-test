@@ -16,7 +16,9 @@ public class TransformProductDataToJSON {
       json.add("title", productDetails.getTitle());
       json.add("unit_price", productDetails.getUnitPrice());
       Double kcal_per_100g = productDetails.getKcalPer100g();
-      if(kcal_per_100g != null) json.add("kcal_per_100g", kcal_per_100g);
+      if(kcal_per_100g != null){
+        json.add("kcal_per_100g", kcal_per_100g);
+      }
       json.add("description", productDetails.getDescription());
       return json.build();
   }
